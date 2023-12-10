@@ -38,17 +38,36 @@ public class ReviewController {
         return principal.getName();
     }
 
-    @PostMapping
+    @PostMapping("/createReview")
     public ResponseEntity<Review> createReview(@RequestBody Map<String, String> payload, Principal principal){
         Review review = reviewRepository.insert(new Review(principal.getName(), payload.get("review")));
         
         mongoTemplate.update(Movie.class)
                      .matching(Criteria.where("imdbId").is(payload.get("imdbId")))
-                     .apply(new Update().push("reviewIds").value(review))
+                     .apply(new Update().push("reviewIds").value(review.getId()))
                      .first();
         
         return new ResponseEntity<Review>(review,HttpStatus.CREATED);    
     }
+
+    @PostMapping("/updateReview")
+    public ResponseEntity<String> updateReview(@RequestBody Map<String, String> payload, Principal principal){
+
+        ObjectId mongodbid = new ObjectId(payload.get("objId"));
+        Review review = reviewRepository.findById(mongodbid).get();
+
+        if(review.getUsername().equals(principal.getName())){
+            mongoTemplate.update(Review.class)
+                .matching(Criteria.where("_id").is(mongodbid))
+                .apply(new Update().set("review", payload.get("review")))
+                .first();
+            return new ResponseEntity<String>("Review - '"+ review.getReview() +"' is updated Successfully!!",HttpStatus.OK);
+        }
+        else{
+            return new ResponseEntity<String>("Not Allowed!!",HttpStatus.UNAUTHORIZED);
+        }
+    }   
+
     @DeleteMapping("/{objId}")
     public ResponseEntity<String> deleteReview(@PathVariable String objId, Principal principal){
 
