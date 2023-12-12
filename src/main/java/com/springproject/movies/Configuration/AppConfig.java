@@ -34,8 +34,8 @@ public class AppConfig {
         http.csrf(csrf -> csrf.disable())
         .cors(cors->cors.disable())
         .authorizeHttpRequests((authz) -> authz
-        .requestMatchers("/api/**").hasRole("ADMIN")
-        .requestMatchers("/swagger-ui/**").hasRole("ADMIN")
+        .requestMatchers("/swagger-ui/**").permitAll()
+        .requestMatchers("/api/**").hasAnyRole("ADMIN","USER")
         .anyRequest().authenticated()
         ).httpBasic(Customizer.withDefaults())
         .formLogin(Customizer.withDefaults());

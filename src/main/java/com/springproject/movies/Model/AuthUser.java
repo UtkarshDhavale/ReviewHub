@@ -1,5 +1,6 @@
 package com.springproject.movies.Model;
 
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -13,9 +14,18 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class AuthUser {
     @Id
-    private Object id;
+    private ObjectId id;
     private String username;
     private String name;
+    private String email;
     private String password;
     private String roles;
+
+    public AuthUser(String username, String name, String email, String password, String roles){
+        this.username = username;
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.roles = roles;
+    }
 }
