@@ -23,5 +23,5 @@ public class Movie {
     private List<String> genres;
     private String poster;
     private List<String> backdrops;
-    private List<Review> reviewIds;
+    private List<ObjectId> reviewIds;
 }

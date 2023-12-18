@@ -8,6 +8,7 @@ import com.springproject.movies.Repository.ReviewRepository;
 
 import java.security.Principal;
 import java.util.Map;
+import java.util.Optional;
 
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,9 +34,15 @@ public class ReviewController {
     @Autowired
     MongoTemplate mongoTemplate;
 
-    @GetMapping("/getReviewedUser")
-    public String getLoggedinUser(Principal principal){
-        return principal.getName();
+    @GetMapping("/getLoggedInUser")
+    public ResponseEntity<String> getLoggedinUser(Principal principal){
+        return new ResponseEntity<String>(principal.getName(),HttpStatus.OK);
+    }
+
+    @GetMapping("/getReview/{objId}")
+    public ResponseEntity<Optional<Review>> getReviewById(@PathVariable String objId){
+        ObjectId id = new ObjectId(objId);
+        return new ResponseEntity<Optional<Review>>(reviewRepository.findById(id),HttpStatus.OK);
     }
 
     @PostMapping("/createReview")
@@ -68,7 +75,7 @@ public class ReviewController {
         }
     }   
 
-    @DeleteMapping("/{objId}")
+    @DeleteMapping("/remove/{objId}")
     public ResponseEntity<String> deleteReview(@PathVariable String objId, Principal principal){
 
         ObjectId mongodbid = new ObjectId(objId);
