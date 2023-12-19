@@ -30,7 +30,6 @@ public class AuthUserDetailsService implements UserDetailsService {
             return User.builder()
                     .username(authUser.get().getUsername())
                     .password(authUser.get().getPassword())
-                    .roles(authUser.get().getRoles())
                     .build();
         }
     }

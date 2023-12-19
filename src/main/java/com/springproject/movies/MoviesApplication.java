@@ -3,11 +3,11 @@ package com.springproject.movies;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-//import io.swagger.v3.oas.annotations.OpenAPIDefinition;
-//import io.swagger.v3.oas.annotations.info.Info;
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.info.Info;
 
 
-/*
+
 @OpenAPIDefinition(
 	info = @Info(
 			title = "ReviewHub - Backend Services",
@@ -15,7 +15,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 			description = "A Spring Boot application where users can write and read reviews for movies, creating a hub of valuable film opinions."
 	)
 )
-*/
+
 @SpringBootApplication
 public class MoviesApplication { 
 

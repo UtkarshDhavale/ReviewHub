@@ -2,12 +2,13 @@ package com.springproject.movies.Controller;
 
 import org.springframework.web.bind.annotation.RestController;
 
+import com.springproject.movies.Model.CreateReviewSchema;
 import com.springproject.movies.Model.Movie;
 import com.springproject.movies.Model.Review;
+import com.springproject.movies.Model.UpdateReviewSchema;
 import com.springproject.movies.Repository.ReviewRepository;
 
 import java.security.Principal;
-import java.util.Map;
 import java.util.Optional;
 
 import org.bson.types.ObjectId;
@@ -46,11 +47,11 @@ public class ReviewController {
     }
 
     @PostMapping("/createReview")
-    public ResponseEntity<Review> createReview(@RequestBody Map<String, String> payload, Principal principal){
-        Review review = reviewRepository.insert(new Review(principal.getName(), payload.get("review")));
+    public ResponseEntity<Review> createReview(@RequestBody CreateReviewSchema payload, Principal principal){
+        Review review = reviewRepository.insert(new Review(principal.getName(), payload.getReview()));
         
         mongoTemplate.update(Movie.class)
-                     .matching(Criteria.where("imdbId").is(payload.get("imdbId")))
+                     .matching(Criteria.where("imdbId").is(payload.getImdbid()))
                      .apply(new Update().push("reviewIds").value(review.getId()))
                      .first();
         
@@ -58,15 +59,15 @@ public class ReviewController {
     }
 
     @PostMapping("/updateReview")
-    public ResponseEntity<String> updateReview(@RequestBody Map<String, String> payload, Principal principal){
+    public ResponseEntity<String> updateReview(@RequestBody UpdateReviewSchema payload, Principal principal){
 
-        ObjectId mongodbid = new ObjectId(payload.get("objId"));
+        ObjectId mongodbid = new ObjectId(payload.getObjId());
         Review review = reviewRepository.findById(mongodbid).get();
 
         if(review.getUsername().equals(principal.getName())){
             mongoTemplate.update(Review.class)
                 .matching(Criteria.where("_id").is(mongodbid))
-                .apply(new Update().set("review", payload.get("review")))
+                .apply(new Update().set("review", payload.getReview()))
                 .first();
             return new ResponseEntity<String>("Review - '"+ review.getReview() +"' is updated Successfully!!",HttpStatus.OK);
         }

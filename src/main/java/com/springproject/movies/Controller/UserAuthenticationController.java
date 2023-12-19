@@ -1,7 +1,5 @@
 package com.springproject.movies.Controller;
 
-import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.springproject.movies.Model.AuthUser;
 import com.springproject.movies.Model.JwtAuthRequest;
 import com.springproject.movies.Model.JwtAuthResponse;
+import com.springproject.movies.Model.RegisterUserSchema;
 import com.springproject.movies.Repository.UserRepository;
 import com.springproject.movies.Security.JwtTokenHelper;
 
@@ -40,8 +39,8 @@ public class UserAuthenticationController {
     private JwtTokenHelper helper;
 
     @PostMapping("/register")
-    public ResponseEntity<AuthUser> registerUser(@RequestBody Map<String, String> payload){
-        AuthUser authUser = userRepository.insert(new AuthUser(payload.get("username"),payload.get("name"),payload.get("email"),new BCryptPasswordEncoder().encode((payload.get("password"))),"USER"));
+    public ResponseEntity<AuthUser> registerUser(@RequestBody RegisterUserSchema payload){
+        AuthUser authUser = userRepository.insert(new AuthUser(payload.getUsername(),payload.getUsername(),payload.getEmail(),new BCryptPasswordEncoder().encode((payload.getPassword()))));
         return new ResponseEntity<AuthUser>(authUser,HttpStatus.CREATED);
     }
 
